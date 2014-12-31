@@ -1,6 +1,7 @@
 (ns leiningen.sablecc.compile
   (:require [clojure.java.io :as io]
-            [leiningen.compile :as lein-compile])
+            [leiningen.compile :as lein-compile]
+            [leiningen.javac :as lein-javac])
   (:refer-clojure :exclude [compile])
   (:import [org.sablecc.sablecc SableCC]))
 
@@ -35,6 +36,6 @@
       (.mkdir target)
       (doseq [s (sources project)]
         (SableCC/processGrammar s target))
-      (lein-compile/compile (assoc project :java-source-paths [target-path]))
+      (lein-javac/javac (assoc project :java-source-paths [target-path]))
       (lein-compile/compile project)))
   
