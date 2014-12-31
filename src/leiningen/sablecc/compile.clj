@@ -47,6 +47,7 @@
              (apply f (into [project] args))))))
 
 (defn activate
+  "Activate SableCC javac hook"
   [& args]
     (or @javac-hook-activated
         (do (reset! javac-hook-activated true)
@@ -57,9 +58,7 @@
   "Compile SableCC sources"
   [project]
     (activate project)
-    (let [target-path (destination-path project)
-          target (io/file target-path)]
-      (lein-javac/javac project) ; Runs javac-hook
-      (lein-compile/compile project)))
+    (lein-javac/javac project) ; Runs javac-hook
+    (lein-compile/compile project))
   
 
