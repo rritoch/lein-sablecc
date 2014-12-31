@@ -8,10 +8,9 @@
 
 (defn sablecc-source-paths
   [project]
-  (let [paths (:sablecc-source-paths project)]
-       (if paths
-           (vec paths)
-           [])))
+  (if-let [paths (:sablecc-source-paths project)]
+      (vec paths)
+      []))
 
 (defn sources
   [project]
