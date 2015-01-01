@@ -1,7 +1,8 @@
-(ns leiningen.sablecc.usage
-  (import [org.sablecc.sablecc SableCC]))
+(ns leiningen.sablecc.usage 
+  (require [leiningen.core.eval :as lein-eval]))
 
 (defn usage
   "SableCC Usage"
   [project]
-    (SableCC/main (into-array String [])))
+    (lein-eval/eval-in-project project 
+                     `(org.sablecc.sablecc.SableCC/main (clojure.core/into-array java.lang.String []))))

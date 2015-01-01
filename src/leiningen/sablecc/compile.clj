@@ -3,9 +3,9 @@
             [robert.hooke]
             [leiningen.compile :as lein-compile]
             [leiningen.javac :as lein-javac]
-            [clojure.string :as string])
-  (:refer-clojure :exclude [compile])
-  (:import [org.sablecc.sablecc SableCC]))
+            [clojure.string :as string]
+            [leiningen.core.eval :refer [eval-in-project]])
+  (:refer-clojure :exclude [compile]))
 
 (def javac-hook-run (atom false))
 (def javac-hook-activated (atom false))
@@ -55,8 +55,10 @@
         (.mkdirs target)
         (.mkdir target)
         (doseq [s (sources project)]
-               (if (need-compile? project s)
-                   (SableCC/processGrammar s target)))))
+               (let [ss (.toString s)]
+                    (if (need-compile? project s)
+                        (eval-in-project project `(org.sablecc.sablecc.SableCC/processGrammar (clojure.java.io/file ~ss) (clojure.java.io/file ~target-path))
+                                         '(require 'clojure.java.io)))))))
 
 (defn javac-hook
   [f project & args]

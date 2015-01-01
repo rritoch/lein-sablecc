@@ -1,9 +1,9 @@
 (ns leiningen.sablecc.license
-  (import [org.sablecc.sablecc SableCC]))
+  (require [leiningen.core.eval :refer [eval-in-project]]))
 
 (defn license
   "Display license"
   [project]
-     (SableCC/main (into-array String ["--license"])))
+     (eval-in-project project `(org.sablecc.sablecc.SableCC/main (into-array String ["--license"]))))
   
   
