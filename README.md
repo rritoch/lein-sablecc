@@ -7,13 +7,15 @@ Lein-SableCC is a leiningen plugin that automates compiling of SableCC grammars.
 Add the following to your project.clj replacing the sablecc-source-paths with
 the directory to search for sablecc sources with the file extension ".scc". 
 SableCC is not provided by this plugin but it is required and must be included
-as a dependency of your project. This plugin has been tested against sablecc 2 
-and sablecc 3.
+as a dependency of your project. The dependency should normally be provided 
+in the :dev profile since it is only needed during compilation of the 
+grammar sources.  This plugin has been tested against sablecc version 2.x and
+3.x, but isn't guaranteed to work with future releases of sablecc.
 
 :plugins [[lein-sablecc "0.1.0-SNAPSHOT"]]<br />
 :sablecc-source-paths ["src/sablecc"]<br />
 :hooks [leiningen.sablecc.compile]<br />
-:dependencies [[sablecc/sablecc "2.18.2"]]
+:profiles {:dev {:dependencies [[sablecc/sablecc "2.18.2"]]}}<br />
 
 ## License
 
