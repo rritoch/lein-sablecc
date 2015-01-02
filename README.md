@@ -13,7 +13,7 @@ project. This plugin has been tested against **SableCC 2.x** and **3.x**.
 **Example:**
 
 ```
-:plugins [[lein-sablecc "0.1.0-SNAPSHOT"]]
+:plugins [[lein-sablecc "1.0.0"]]
 :profiles {:dev {:dependencies [[sablecc/sablecc "2.18.2"]]}}
 ```
 
