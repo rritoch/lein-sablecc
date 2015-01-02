@@ -1,25 +1,62 @@
-# lein-sablecc
+# Lein-SableCC
 
 Lein-SableCC is a leiningen plugin that automates compiling of SableCC grammars.
 
 ## Usage
 
-Add the following to your project.clj replacing the sablecc-source-paths with
-the directory to search for sablecc sources with the file extension ".scc". 
-SableCC is not provided by this plugin but it is required and must be included
-as a dependency of your project. The dependency should normally be provided 
-in the :dev profile since it is only needed during compilation of the 
-grammar sources.  This plugin has been tested against sablecc version 2.x and
-3.x, but isn't guaranteed to work with future releases of sablecc.
+To enable this plugin it must be added to your leiningen project file in the 
+**:plugins** list. This plugin depends on, but does not provide, SableCC. In most
+cases SableCC should be provided as a dependency in the **:dev** profile of your
+project. This plugin has been tested against **SableCC 2.x** and **3.x**.
+<br />
+<br />
+Example:
 
+```
 :plugins [[lein-sablecc "0.1.0-SNAPSHOT"]]<br />
-:sablecc-source-paths ["src/sablecc"]<br />
-:hooks [leiningen.sablecc.compile]<br />
 :profiles {:dev {:dependencies [[sablecc/sablecc "2.18.2"]]}}<br />
+```
+
+This plugin only recognizes grammar files which have the file extension **.scc** 
+and will only search for them in the directories listed in **:sablecc-source-paths**.
+<br />
+<br />
+Example:
+
+```
+:sablecc-source-paths ["src/sablecc"]<br />
+```
+
+To generate the java sources from the grammar files and compile them run the 
+following command from a shell.
+
+lein sablecc compile
+
+All of the sources will generated in the :target-path sub-directory 
+**generated-sources/sablecc** and will be compiled to the **:compile-path**. 
+
+<br />
+
+Implementation note: Java sources are only regenerated if the generated 
+**Parser.java** file is missing or has a modification time that is less than the 
+modification time of the **.scc** grammar source file.
+
+## Automation hook
+
+For convenience a hook is provided which will automatically compile the **.scc**
+grammar files each time the **javac** leiningen task is run, such as when running 
+**'lein compile'** from a shell. To enable this hook you will need to add it to
+your leiningen project file hooks.
+
+Example:
+
+```
+:hooks [leiningen.sablecc.compile]<br />
+```
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014-2015 Ralph Ritoch <rritoch@gmail.com>
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

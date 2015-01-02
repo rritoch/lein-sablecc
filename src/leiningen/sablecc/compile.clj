@@ -8,35 +8,102 @@
   (:refer-clojure :exclude [compile]))
 
 (def javac-hook-run (atom false))
+
 (def javac-hook-activated (atom false))
 
 (defn sablecc-source-paths
   [project]
-  (if-let [paths (:sablecc-source-paths project)]
+    (if-let [paths (:sablecc-source-paths project)]
       (vec paths)
       []))
 
 (defn sources
   [project]
-    (let [paths (sablecc-source-paths project)]
-      (filter #(.endsWith (.toString %) ".scc")
-              (reduce into 
-                #{} 
-                (map (comp file-seq io/file)
-                     paths)))))
-                            
+    (filter #(.endsWith (.toString %) ".scc")
+            (reduce into 
+                    #{} 
+                    (map (comp file-seq io/file)
+                         (sablecc-source-paths project)))))
+
+(defn strip-sablecc-comments
+  [s]
+    (let [len (count s)]
+      (loop [idx 0 e false q nil cmt 0 o ""]
+        (if (>= idx len)
+            o
+            (recur (inc idx)
+                   (and (not e)
+                        (= cmt 0)
+                        (= \\ (nth s idx)))
+                   (cond (or e (> cmt 0))
+                         q
+                         (and q
+                              (= (nth s idx) q))
+                         nil
+                         (= (nth s idx) \')
+                         \'
+                         (= (nth s idx) \")
+                         \"
+                         :else
+                         nil)
+                   (cond (or e q)
+                         cmt
+                         (and (= cmt 0)
+                              (< (inc idx) len)
+                              (= (nth s idx) \/)
+                              (= (nth s (inc idx)) \*))
+                         1
+                         (= cmt 1)
+                         2
+                         (and (= cmt 2)
+                              (< (inc idx) len)
+                              (= (nth s idx) \*)
+                              (= (nth s (inc idx)) \/))
+                         3
+                         (= cmt 3)
+                         0
+                         (and (= cmt 0)
+                              (< (inc idx) len)
+                              (= (nth s idx) \/)
+                              (= (nth s (inc idx)) \/))
+                         8
+                         (and (= cmt 8)
+                              (or (= (nth s idx) \return)
+                                  (= (nth s idx) \newline)))
+                         0
+                         :else
+                         cmt)
+                   (cond (= (nth s idx) \return)
+                         (str o \return)
+                         (= (nth s idx) \newline)
+                         (str o \newline)
+                         (or (> cmt 0)
+                             (and (= cmt 0)
+                                  (not e)
+                                  (not q)
+                                  (< (inc idx) len)
+                                  (= (nth s idx) \/)
+                                  (= (nth s (inc idx)) \*))
+                             (and (= cmt 0)
+                                  (not e)
+                                  (not q)
+                              (< (inc idx) len)
+                              (= (nth s idx) \/)
+                              (= (nth s (inc idx)) \/)))
+                         o
+                         :else
+                         (str o (nth s idx))))))))
 
 (defn get-sablecc-package
   [f]
-    (when-let [r (re-find #"(s?)(^|\n)\QPackage\E(\s+)([^;\s]*)"  
-                          (string/replace (slurp f) 
-                                          #"(s?)/\*(.|\r\n)*?\*/" ""))]
-      (nth r 4)))
-           
+    (when-let [r (re-find #"(s?)(^|;)(\s*)\QPackage\E(\s+)([^;\s]*)"  
+                          (strip-sablecc-comments (slurp f)))]
+      (nth r 5)))
 
 (defn destination-path
   [project]
-    (str (:target-path project) "/generated-sources/sablecc/"))
+    (str (:target-path project) 
+         "/generated-sources/sablecc/"))
 
 (defn need-compile?
   [project src]
