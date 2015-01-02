@@ -42,16 +42,16 @@ All of the sources will generated in the **:target-path** sub-directory
 **Parser.java** file is missing or has a modification time that is less than the 
 modification time of the **.scc** grammar source file.  This optimization 
 ensures that sources are only recompiled when the grammar file has been 
-modified.  The **Parser.java** file is located using the Package declaration 
-in the grammar file. If this plugin cannot locate a Package declaration in 
-the **.scc** grammar file, or if it has been commented out, than the grammar 
-file will not be compiled.
+modified.  The **Parser.java** file is located using the **Package** declaration 
+in the **.scc** grammar source file. If this plugin cannot locate a Package 
+declaration in the **.scc** grammar file, or if it has been commented out, 
+than the **.scc** grammar source file will not be compiled.
 
 ## Automation hook
 
 For convenience a hook is provided which will automatically compile the **.scc**
 grammar files each time the **javac** leiningen task is run, such as when running 
-**'lein compile'** from a shell. To enable this hook you will need to add it to
+'**lein compile**' from a shell. To enable this hook you will need to add it to
 your leiningen project hooks.
 
 **Example:**
@@ -59,6 +59,9 @@ your leiningen project hooks.
 ```
 :hooks [leiningen.sablecc.compile]
 ```
+
+When this hook is enabled '**lein javac**' can be run from the command line to
+compile your grammar source files.
 
 ## License
 
