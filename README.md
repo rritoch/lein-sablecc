@@ -43,7 +43,7 @@ All of the sources will generated in the **:target-path** sub-directory
 modification time of the **.scc** grammar source file.  This optimization 
 ensures that sources are only recompiled when the grammar file has been 
 modified.  The **Parser.java** file is located using the **Package** declaration 
-in the **.scc** grammar source file. If this plugin cannot locate a Package 
+in the **.scc** grammar source file. If this plugin cannot locate a **Package** 
 declaration in the **.scc** grammar file, or if it has been commented out, 
 than the **.scc** grammar source file will not be compiled.
 
