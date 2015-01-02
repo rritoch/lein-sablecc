@@ -35,12 +35,17 @@ following command from a shell.
 lein sablecc compile
 ```
 
-All of the sources will generated in the :target-path sub-directory 
+All of the sources will generated in the **:target-path** sub-directory 
 **generated-sources/sablecc** and will be compiled to the **:compile-path**.<br />
 
 **Implementation note:** Java sources are only regenerated if the generated 
 **Parser.java** file is missing or has a modification time that is less than the 
-modification time of the **.scc** grammar source file.
+modification time of the **.scc** grammar source file.  This optimization 
+ensures that sources are only recompiled when the grammar file has been 
+modified.  The **Parser.java** file is located using the Package declaration 
+in the grammar file. If this plugin cannot locate a Package declaration in 
+the **.scc** grammar file, or if it has been commented out, than the grammar 
+file will not be compiled.
 
 ## Automation hook
 
