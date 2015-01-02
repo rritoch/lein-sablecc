@@ -35,7 +35,7 @@ following command from a shell.
 lein sablecc compile
 ```
 
-All of the sources will generated in the **:target-path** sub-directory 
+All of the sources are generated in the **:target-path** sub-directory 
 **generated-sources/sablecc** and will be compiled to the **:compile-path**.<br />
 
 **Implementation note:** Java sources are only regenerated if the generated 
