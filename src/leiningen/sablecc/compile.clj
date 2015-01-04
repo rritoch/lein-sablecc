@@ -25,6 +25,14 @@
                     (map (comp file-seq io/file)
                          (sablecc-source-paths project)))))
 
+(defn clean-path 
+  [fname]
+    (let [f (io/file fname)]
+         (when (.isDirectory f)
+            (doseq [f2 (.listFiles f)]
+              (clean-path f2)))
+         (if (.exists f) (io/delete-file f))))
+
 (defn strip-sablecc-comments
   [s]
     (let [len (count s)]
@@ -115,17 +123,28 @@
            (or (not (.isFile pp)) 
                (> (.lastModified src) (.lastModified pp))))))
 
+(defn clean-gen-sources
+  [project src]
+    (when-let [pkg (get-sablecc-package src)]
+      (let [pp (io/file (str (destination-path project)
+                             "/"
+                             (string/replace pkg "." "/")))]
+           (clean-path pp))))
+
 (defn gen-sources
   [project]
    (let [target-path (destination-path project)
          target (io/file target-path)]
+        (doseq [s (sources project)]
+                  (if (need-compile? project s)
+                      (clean-gen-sources project s)))
         (.mkdirs target)
         (.mkdir target)
         (doseq [s (sources project)]
-               (let [ss (.toString s)]
+             (let [ss (.toString s)]
                     (if (need-compile? project s)
                         (eval-in-project project `(org.sablecc.sablecc.SableCC/processGrammar (clojure.java.io/file ~ss) (clojure.java.io/file ~target-path))
-                                         '(require 'clojure.java.io)))))))
+                                       '(require 'clojure.java.io)))))))
 
 (defn javac-hook
   [f project & args]
