@@ -40,9 +40,10 @@
         (if (>= idx len)
             o
             (recur (inc idx)
-                   (and (not e)
-                        (= cmt 0)
-                        (= \\ (nth s idx)))
+                   #_(and (not e)
+                         (= cmt 0)
+                         (= \\ (nth s idx)))
+                   false
                    (cond (or e (> cmt 0))
                          q
                          (and q
