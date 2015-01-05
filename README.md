@@ -13,7 +13,7 @@ project. This plugin has been tested against **SableCC 2.x** and **3.x**.
 **Example:**
 
 ```
-:plugins [[lein-sablecc "1.0.0"]]
+:plugins [[lein-sablecc "1.1.0"]]
 :profiles {:dev {:dependencies [[sablecc/sablecc "2.18.2"]]}}
 ```
 
@@ -74,6 +74,7 @@ compile your grammar source files.
 * New Feature - Added Source Generation pre-cleaner
 * Bugfix - Repaired string escape sequence handling
 * Bugfix - Added generated .dat files to target classpath
+* Release - January 5, 2015
 
 ## License
 
