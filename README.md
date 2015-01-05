@@ -63,6 +63,18 @@ your leiningen project hooks.
 When this hook is enabled '**lein javac**' can be run from the command line to
 compile your grammar source files.
 
+## Change Log
+
+### 1.0.0
+
+* Release - January 2, 2015
+
+### 1.1.0
+
+* New Feature - Added Source Generation pre-cleaner
+* Bugfix - Repaired string escape sequence handling
+* Bugfix - Added generated .dat files to target classpath
+
 ## License
 
 Copyright © 2014-2015 Ralph Ritoch <rritoch@gmail.com>
