@@ -1,4 +1,4 @@
-(defproject lein-sablecc "1.1.0"
+(defproject lein-sablecc "1.1.1-SNAPSHOT"
   :description "Leiningen SableCC plugin"
   :url "https://github.com/rritoch/lein-sablecc"
   :license {:name "Eclipse Public License"
